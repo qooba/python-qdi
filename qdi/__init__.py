@@ -73,19 +73,28 @@ class Container(IContainer):
         """register instance"""
         return self.register_lambda(from_cls, lambda c: instance, key)
 
-    def register(self, from_cls, to_cls, key=''):
+    def register(self, from_cls, to_cls=None, key=''):
         """register"""
+        if to_cls is None:
+            to_cls=from_cls
+
         return self.register_lambda(from_cls, self.__prepare_cls_lambda(to_cls), key)
 
-    def register_singleton(self, from_cls, to_cls, key=''):
+    def register_singleton(self, from_cls, to_cls=None, key=''):
         """register as singleton"""
+        if to_cls is None:
+            to_cls=from_cls
+
         scoped_lambda = self.__prepare_scoped_lambda(
             from_cls, to_cls, self.__singleton_instances, key)
         return self.register_lambda(from_cls, lambda c: scoped_lambda(
             self.__singleton_instances), key)
 
-    def register_scoped(self, from_cls, to_cls, key=''):
+    def register_scoped(self, from_cls, to_cls=None, key=''):
         """register scoped"""
+        if to_cls is None:
+            to_cls=from_cls
+
         return self.register_lambda(from_cls, lambda c: self.__prepare_scoped_lambda(
             from_cls, to_cls, c.scope_instances, key)(c.scope_instances), key)
 
